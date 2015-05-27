@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Server Latency Test Tool</title>
+    <style>
+      #result {
+        width: 300px;
+        font-size:20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Latency</h1>
+    <pre id="result"></pre>
+    <script type="text/javascript">
+      function getPerformanceData(){
+          var t = performance.timing;
+          return [
+            {'metric' : 'connectLatency', 'value' :  t.connectEnd - t.fetchStart},
+            {'metric' : 'networkLatency', 'value' :  t.responseEnd - t.fetchStart},
+          ]
+      }
+      window.onload = function(){
+        setTimeout(function(){
+          var resultEle = document.getElementById('result');
+          var data = getPerformanceData();
+          data.forEach(function(obj){
+            resultEle.innerHTML += obj.metric + ":" + obj.value + "\n";
+          });
+        }, 0);
+      }
+    </script>
+  </body>
+</html>

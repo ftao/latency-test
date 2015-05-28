@@ -12,20 +12,26 @@
     <h1>Latency</h1>
     <pre id="result"></pre>
     <script type="text/javascript">
-      function getPerformanceData(){
-          var t = performance.timing;
+      function parsePerformanceData(t){
           return [
             {'metric' : 'connectLatency', 'value' :  t.connectEnd - t.fetchStart},
             {'metric' : 'networkLatency', 'value' :  t.responseEnd - t.fetchStart},
           ]
       }
-      window.onload = function(){
-        setTimeout(function(){
+      function reportTimingData(href, t){
           var resultEle = document.getElementById('result');
-          var data = getPerformanceData();
+          var data = parsePerformanceData(t);
           data.forEach(function(obj){
             resultEle.innerHTML += obj.metric + ":" + obj.value + "\n";
           });
+      }
+      window.onload = function(){
+        var reportFunc = top.reportTimingData || window.reportTimingData;
+        setTimeout(function(){
+          reportFunc(
+            window.location.href,
+            window.performance.timing
+          );
         }, 0);
       }
     </script>

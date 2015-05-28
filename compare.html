@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Server Latency Compare Tool</title>
+    <style>
+      #result {
+        width: 300px;
+        font-size:20px;
+      }
+      iframe {
+        visibility: hidden;
+      }
+    </style>
+    <script type="text/javascript">
+      function parsePerformanceData(t){
+        return t.responseEnd - t.connectEnd; 
+      }
+      var timingData = {};
+      function reportTimingData(href, t){
+        timingData[href] = timingData[href] || [];
+        timingData[href].push(parsePerformanceData(t));
+        display();
+      }
+      function display(){
+          var resultEle = document.getElementById('result');
+          resultEle.innerHTML = '';
+          for (k in timingData){
+            if (timingData.hasOwnProperty(k)){
+              resultEle.innerHTML += k  + ":";
+              resultEle.innerHTML += JSON.stringify(timingData[k]);
+              resultEle.innerHTML += '\n';
+            }
+          }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Latency</h1>
+    <pre id="result"></pre>
+    <iframe height="0" src="./index.html"></iframe>
+    <iframe height="0" src="./index.html?v=2"></iframe>
+    <iframe height="0" src="./index.html?v=3"></iframe>
+  </body>
+</html>
